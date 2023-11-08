@@ -1,52 +1,48 @@
 <script setup lang="ts">
-import OT from '@opentok/client';
+import OT, { type PublisherProperties, type SubscriberProperties } from '@opentok/client'
 
-console.log('import.meta.env', import.meta.env)
+const API_KEY = import.meta.env.VITE_OPENTOK_API_KEY
+const SESSION_ID =import.meta.env.VITE_OPENTOK_SESSION_ID
+const TOKEN = import.meta.env.VITE_OPENTOK_TOKEN
 
-const API_KEY = import.meta.env.VITE_OPENTOK_API_KEY;
-const SESSION_ID =import.meta.env.VITE_OPENTOK_SESSION_ID;
-const TOKEN = import.meta.env.VITE_OPENTOK_TOKEN;
-
-function handleError(error) {
-  if (error) {
-    console.error(error);
-  }
+function handleError(error: any) {
+  console.error(error)
 }
 
 function initializeSession() {
-  const session = OT.initSession(API_KEY, SESSION_ID);
+  const session = OT.initSession(API_KEY, SESSION_ID)
 
   session.on('streamCreated', (event) => {
-    const subscriberOptions = {
+    const subscriberOptions: SubscriberProperties = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
-    };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-  });
+    }
+    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError)
+  })
 
   session.on('sessionDisconnected', (event) => {
-    console.log('You were disconnected from the session.', event.reason);
-  });
+    console.log('You were disconnected from the session.', event.reason)
+  })
 
-  const publisherOptions = {
+  const publisherOptions: PublisherProperties = {
     insertMode: 'append',
     width: '100%',
     height: '100%'
-  };
+  }
 
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+  const publisher = OT.initPublisher('publisher', publisherOptions, handleError)
 
   session.connect(TOKEN, (error) => {
     if (error) {
-      handleError(error);
+      handleError(error)
     } else {
-      session.publish(publisher, handleError);
+      session.publish(publisher, handleError)
     }
-  });
+  })
 }
 
-initializeSession();
+initializeSession()
 
 </script>
 
