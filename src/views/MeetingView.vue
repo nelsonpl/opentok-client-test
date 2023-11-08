@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import OT from '@opentok/client';
 
-const API_KEY = '';
-const SESSION_ID = '';
-const TOKEN = '';
+console.log('import.meta.env', import.meta.env)
+
+const API_KEY = import.meta.env.VITE_OPENTOK_API_KEY;
+const SESSION_ID =import.meta.env.VITE_OPENTOK_SESSION_ID;
+const TOKEN = import.meta.env.VITE_OPENTOK_TOKEN;
 
 function handleError(error) {
   if (error) {
